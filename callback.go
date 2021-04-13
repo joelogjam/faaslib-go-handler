@@ -13,20 +13,20 @@ import (
 
 var url = "https://postman-echo.com/post"
 
-func InjectCallback(start time.Time, xid xid.ID) {
+func InjectCallback(programName string, version string, start time.Time, xid xid.ID) {
 	timeTaken := time.Since(start)
 	callbackHome(xid, "COMPLETED")
-	_=glg.Infof("exe: %s took %s for token %s", filepath.Base(os.Args[0]), timeTaken, xid.String())
+	_ = glg.Infof("exe: %s v %s took %s for token %s", programName, version, timeTaken, xid.String())
 }
 
-func CallHomeStart() xid.ID{
+func CallHomeStart() xid.ID {
 	uniqueToken := xid.New()
 	go callbackHome(uniqueToken, "STARTED")
-	_= glg.Infof("calling home start")
+	_ = glg.Infof("calling home start")
 	return uniqueToken
 }
 
-func callbackHome(xid xid.ID, event string){
+func callbackHome(xid xid.ID, event string) {
 	postBody, _ := json.Marshal(map[string]string{
 		"name":  filepath.Base(os.Args[0]),
 		"token": xid.String(),
