@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-var url = "https://postman-echo.com/post"
+var url = "https://postman-echo.com/post" // This will get injected or pulled.
 
 func InjectCallback(key string, start time.Time, xid xid.ID) {
 	timeTaken := time.Since(start)
