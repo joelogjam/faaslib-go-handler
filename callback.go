@@ -13,14 +13,14 @@ import (
 
 var url = "https://postman-echo.com/post"
 
-func InjectCallback(programName string, version string, start time.Time, xid xid.ID) {
+func InjectCallback(key string, start time.Time, xid xid.ID) {
 	timeTaken := time.Since(start)
 	callbackHome(xid, "COMPLETED")
-	_ = glg.Infof("exe: %s v %s took %s for token %s", programName, version, timeTaken, xid.String())
+	_ = glg.Infof("exe: %s took %s for token %s", key, timeTaken, xid.String())
 }
 
 func CallHomeStart() xid.ID {
-	uniqueToken := xid.New()
+	uniqueToken := xid.New() //Token for starting + ending, to link the 'Events'
 	go callbackHome(uniqueToken, "STARTED")
 	_ = glg.Infof("calling home start")
 	return uniqueToken
