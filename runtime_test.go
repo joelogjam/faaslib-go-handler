@@ -1,5 +1,11 @@
 package faaslib_go_handler
 
+import (
+	"log"
+	"testing"
+	"time"
+)
+
 //func TestAbs(t *testing.T) {
 //	got := math.Abs(-1)
 //	if got != 1 {
@@ -32,8 +38,8 @@ package faaslib_go_handler
 //	log.Print("There")
 //}
 //
-//func TestLogging3(t *testing.T) {
-//	defer InjectCallback(time.Now(), CallHomeStart())
-//	log.Print("here")
-//	log.Print("now")
-//}
+func TestLogging3(t *testing.T) {
+	defer InjectCallback("2345", time.Now(), CallHomeStart("2345"))
+	log.Print("here")
+	log.Print("now")
+}

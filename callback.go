@@ -6,8 +6,6 @@ import (
 	"github.com/kpango/glg"
 	"github.com/rs/xid"
 	"net/http"
-	"os"
-	"path/filepath"
 	"time"
 )
 
@@ -15,23 +13,26 @@ var url = "https://postman-echo.com/post"
 
 func InjectCallback(key string, start time.Time, xid xid.ID) {
 	timeTaken := time.Since(start)
-	callbackHome(xid, "COMPLETED")
-	_ = glg.Infof("exe: %s took %s for token %s", key, timeTaken, xid.String())
+	callbackHomeCompleteEvent(key, timeTaken, xid)
 }
 
-func CallHomeStart() xid.ID {
+func CallHomeStart(key string) xid.ID {
 	uniqueToken := xid.New() //Token for starting + ending, to link the 'Events'
-	go callbackHome(uniqueToken, "STARTED")
+	go callbackHomeStartEvent(key, uniqueToken, "STARTED")
 	_ = glg.Infof("calling home start")
 	return uniqueToken
 }
 
-func callbackHome(xid xid.ID, event string) {
+func callbackHomeStartEvent(key string, xid xid.ID, event string) {
 	postBody, _ := json.Marshal(map[string]string{
-		"name":  filepath.Base(os.Args[0]),
+		"key":   key,
 		"token": xid.String(),
 		"event": event,
 	})
 
 	http.Post(url, "application/json", bytes.NewBuffer(postBody))
+}
+
+func callbackHomeCompleteEvent(key string, timeTaken time.Duration, xid xid.ID) {
+	_ = glg.Infof("key: %s took %s for token %s", key, timeTaken, xid.String())
 }
